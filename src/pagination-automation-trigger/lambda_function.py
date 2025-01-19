@@ -6,6 +6,11 @@ def lambda_handler(event, context):
     ssm = boto3.client('ssm', region_name='ap-south-1')
     
     url = event.get('url')
+    review_paginate_next = event.get('reviewPaginateNext')
+    review_author = event.get('reviewAuthor')
+    review_title = event.get('reviewTitle')
+    review_text = event.get('reviewText')
+    review_rating = event.get('reviewRating')
     
     unique_id = str(uuid.uuid4())
     
@@ -46,5 +51,10 @@ def lambda_handler(event, context):
         'Status': status,
         'Output': invocation_response['StandardOutputContent'],
         'Error': invocation_response['StandardErrorContent'],
-        'uuid': unique_id
+        'uuid': unique_id,
+        'reviewPaginateNext': review_paginate_next,
+        'reviewAuthor': review_author,
+        'reviewTitle': review_title,
+        'reviewBody': review_text,
+        "rating": review_rating
     }

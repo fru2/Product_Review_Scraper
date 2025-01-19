@@ -12,7 +12,7 @@ nest_asyncio.apply()
 
 async def scrape_website(url, next_button_class, element_to_check, unique_file_name):
     count = 0
-    responses_list = []  # Initialize an empty list to store responses
+    responses_list = {}  # Initialize an empty list to store responses
     
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
@@ -38,8 +38,10 @@ async def scrape_website(url, next_button_class, element_to_check, unique_file_n
             # Append cleaned HTML source code to the list
             print(count)
             count += 1
-            responses_list.append(cleaned_html)  # Append cleaned HTML to responses_list
+            responses_list[str(count)] = cleaned_html  # Append cleaned HTML to responses_list
 
+            if (count > 14): break
+            
             try:
                 next_button = page.locator(f'.{next_button_class}')
                 
@@ -68,6 +70,8 @@ def upload_to_s3(data, unique_file_name):
     s3_client = boto3.client('s3')  # Create an S3 client
     
     bucket_name = 'extracted-source-list'  # Replace with your bucket name
+
+    #data_dict = {"sources" : data}
     
     # Convert list to JSON string and upload it to S3
     s3_client.put_object(

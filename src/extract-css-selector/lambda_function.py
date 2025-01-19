@@ -18,7 +18,7 @@ def lambda_handler(event, context):
                 {
                     "parts": [
                         {
-                            "text": "extract the class name of pagination next page button of review section, author of review, text of review, and rating classname from this codebase. Just return a comma seperated value of classnames, if multiple class name is found for the same section, use the most relevant one which is unique. if not present then add 'null' at it's place. Don't return any other text than that. Here is the code: " + cleaned_html_with_bs4
+                            "text": "extract the class name of pagination next page button of review section, author of review, title of review, text of review, and rating classname from this codebase. Just return a comma seperated value of classnames, if multiple class name is found for the same section, use the most relevant one which is unique. if not present then add 'null' at it's place. Don't return any other text than that. Here is the code: " + cleaned_html_with_bs4
                         }
                     ]
                 }
@@ -30,12 +30,13 @@ def lambda_handler(event, context):
         data = response.json()
         message_content = data['candidates'][0]['content']['parts'][0]['text']
         message_content = message_content.strip("\n")
-        review_paginate_next, review_author, review_text, review_rating = message_content.split(",")  
+        review_paginate_next, review_author, review_title, review_text, review_rating = message_content.split(",")  
         return {
             'statusCode': 200,
             'url': url,
             'reviewPaginateNext': review_paginate_next,
             'reviewAuthor': review_author,
+            'reviewTitle': review_title,
             'reviewText': review_text,
             "reviewRating": review_rating
         }

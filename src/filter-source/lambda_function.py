@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup, Comment
 import requests
 
 def lambda_handler(event, context):
+    # Get the URL from the event input
     url = event.get('page')
 
     try:
@@ -26,7 +27,8 @@ def lambda_handler(event, context):
         else:
             return {
                 'statusCode': response.status_code,
-                'body': f"Failed to retrieve the webpage. Status code: {response.status_code}"
+                'body': f"Failed to retrieve the webpage. Status code: {response.status_code}",
+                'url': url
             }
     except requests.exceptions.RequestException as e:
         return {

@@ -47,12 +47,21 @@ def lambda_handler(event, context):
         
         # print(titles)
 
-        for i in range(min(len(titles), len(bodies), len(authors), len(ratings))):
+        # for i in range(min(len(titles), len(bodies), len(authors), len(ratings))):
+        #     review = {
+        #         "title": titles[i].get_text(strip=True),
+        #         "body": bodies[i].get_text(strip=True),
+        #         "author": authors[i].get_text(strip=True),
+        #         "rating": ratings[i].get_text(strip=True)
+        #     }
+        #     reviews.append(review)
+        
+        for i in range(max(len(titles), len(bodies), len(authors), len(ratings))):
             review = {
-                "title": titles[i].get_text(strip=True),
-                "body": bodies[i].get_text(strip=True),
-                "author": authors[i].get_text(strip=True),
-                "rating": ratings[i].get_text(strip=True)
+                "title": titles[i].get_text(strip=True) if i < len(titles) else "",
+                "body": bodies[i].get_text(strip=True) if i < len(bodies) else "",
+                "author": authors[i].get_text(strip=True) if i < len(authors) else "",
+                "rating": ratings[i].get_text(strip=True) if i < len(ratings) else ""
             }
             reviews.append(review)
 
@@ -60,6 +69,11 @@ def lambda_handler(event, context):
 
     return {
         'statusCode': 200,
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+        },
         'reviews_count': len(reviews),
-        'reviews': json.dumps(reviews)
+        'reviews': reviews
     }
